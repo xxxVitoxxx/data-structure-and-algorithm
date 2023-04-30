@@ -86,6 +86,35 @@ func (root *Node) LayerOrder() {
 	}
 }
 
+// GetTreeDegree count degree of a tree
+func (root *Node) GetTreeDegree() int {
+	if root != nil {
+		var maxDegree int
+		queue := append([]*Node{}, root)
+		for len(queue) != 0 {
+			element := queue[0]
+			queue = queue[1:]
+
+			var degree int
+			if element.left != nil {
+				degree += 1
+				queue = append(queue, element.left)
+			}
+
+			if element.right != nil {
+				degree += 1
+				queue = append(queue, element.right)
+			}
+
+			if degree > maxDegree {
+				maxDegree = degree
+			}
+		}
+		return maxDegree
+	}
+	return 0
+}
+
 func main() {
 	tree := newBinaryTree(5)
 	tree.root.left = createNode(1)
@@ -104,6 +133,9 @@ func main() {
 	            /
 	           7
 	*/
+
+	degree := tree.root.GetTreeDegree()
+	fmt.Println("degree of a tree", degree)
 
 	count := tree.root.GetNodeCount()
 	fmt.Println("count of nodes in tree: ", count)
