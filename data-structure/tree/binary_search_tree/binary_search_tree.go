@@ -11,8 +11,8 @@ type BST struct {
 	root *Node
 }
 
-func newNode(value int) *Node {
-	return &Node{value: value}
+func newBST(value int) *BST {
+	return &BST{root: &Node{value: value}}
 }
 
 // Insert insert an element in a tree
@@ -80,7 +80,7 @@ func (node *Node) BFT() {
 }
 
 func main() {
-	tree := &BST{root: &Node{value: 5}}
+	tree := newBST(5)
 	tree.root.Insert(8)
 	tree.root.Insert(3)
 	tree.root.Insert(1)
