@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Node struct {
 	value       int
@@ -115,6 +118,29 @@ func (root *Node) GetTreeDegree() int {
 	return 0
 }
 
+// Search search the node that stores the value
+func (root *Node) Search(value int) (*Node, error) {
+	if root != nil {
+		queue := append([]*Node{}, root)
+		for len(queue) != 0 {
+			element := queue[0]
+			queue = queue[1:]
+			if element.value == value {
+				return element, nil
+			}
+
+			if element.left != nil {
+				queue = append(queue, element.left)
+			}
+
+			if element.right != nil {
+				queue = append(queue, element.right)
+			}
+		}
+	}
+	return &Node{}, errors.New("the value not exist in node of a tree")
+}
+
 func main() {
 	tree := newBinaryTree(5)
 	tree.root.left = createNode(1)
@@ -140,6 +166,13 @@ func main() {
 	count := tree.root.GetNodeCount()
 	fmt.Println("count of nodes in tree: ", count)
 	// 8
+
+	node, err := tree.root.Search(7)
+	if err != nil {
+		fmt.Println("search err: ", err)
+	}
+	fmt.Printf("node %v exist in tree\n", node)
+	// node &{7 <nil> <nil>} exist in tree
 
 	tree.root.Preorder()
 	fmt.Println()
