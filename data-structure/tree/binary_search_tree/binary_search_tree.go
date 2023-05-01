@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Node struct {
 	value       int
@@ -32,6 +35,66 @@ func (node *Node) Insert(element int) {
 			}
 		}
 	}
+}
+
+// GetNodeCount count the number of nodes in tree
+func (node *Node) GetNodeCount() int {
+	if node == nil {
+		return 0
+	}
+	return node.left.GetNodeCount() + node.right.GetNodeCount() + 1
+}
+
+// GetTreeDegree count degree of a tree
+func (node *Node) GetTreeDegree() int {
+	if node != nil {
+		var maxDegree int
+		queue := append([]*Node{}, node)
+		for len(queue) != 0 {
+			element := queue[0]
+			queue = queue[1:]
+
+			var degree int
+			if element.left != nil {
+				degree += 1
+				queue = append(queue, element.left)
+			}
+
+			if element.right != nil {
+				degree += 1
+				queue = append(queue, element.right)
+			}
+
+			if degree > maxDegree {
+				maxDegree = degree
+			}
+		}
+		return maxDegree
+	}
+	return 0
+}
+
+// Search return the node that stores the value
+func (node *Node) Search(value int) (*Node, error) {
+	if node != nil {
+		queue := append([]*Node{}, node)
+		for len(queue) != 0 {
+			element := queue[0]
+			queue = queue[1:]
+			if element.value == value {
+				return element, nil
+			}
+
+			if element.left != nil {
+				queue = append(queue, element.left)
+			}
+
+			if element.right != nil {
+				queue = append(queue, element.right)
+			}
+		}
+	}
+	return &Node{}, errors.New("the value not exist in node of a tree")
 }
 
 // Preorder traversal a tree in preorder
@@ -98,6 +161,21 @@ func main() {
 		            /
 		           9
 	*/
+
+	count := tree.root.GetNodeCount()
+	fmt.Println("count of nodes in a tree: ", count)
+	// count of nodes in a tree:  8
+
+	degree := tree.root.GetTreeDegree()
+	fmt.Println("degree of a tree: ", degree)
+	// degree of a tree:  2
+
+	node, err := tree.root.Search(12)
+	if err != nil {
+		fmt.Println("search err: ", err)
+	}
+	fmt.Printf("node %v exist in a tree\n", node)
+	// node &{12 0x1400011a0a8 <nil>} exist in a tree
 
 	tree.root.Preorder()
 	fmt.Println()
