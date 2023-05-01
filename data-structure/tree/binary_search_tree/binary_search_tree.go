@@ -97,6 +97,22 @@ func (node *Node) Search(value int) (*Node, error) {
 	return &Node{}, errors.New("the value not exist in node of a tree")
 }
 
+// FetchMin _
+func (node *Node) FetchMin() int {
+	if node.left == nil {
+		return node.value
+	}
+	return node.left.FetchMin()
+}
+
+// FetchMax _
+func (node *Node) FetchMax() int {
+	if node.right == nil {
+		return node.value
+	}
+	return node.right.FetchMax()
+}
+
 // Preorder traversal a tree in preorder
 func (node *Node) Preorder() {
 	if node != nil {
@@ -169,6 +185,14 @@ func main() {
 	degree := tree.root.GetTreeDegree()
 	fmt.Println("degree of a tree: ", degree)
 	// degree of a tree:  2
+
+	min := tree.root.FetchMin()
+	fmt.Println("min: ", min)
+	// min:  1
+
+	max := tree.root.FetchMax()
+	fmt.Println("max: ", max)
+	// max:  12
 
 	node, err := tree.root.Search(12)
 	if err != nil {
