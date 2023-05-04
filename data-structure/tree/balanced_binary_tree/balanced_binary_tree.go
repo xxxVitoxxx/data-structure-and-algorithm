@@ -68,7 +68,7 @@ func isBalance(node *Node) bool {
 
 func height(node *Node) int {
 	if node == nil {
-		return 0
+		return -1
 	}
 	return 1 + max(height(node.left), height(node.right))
 }
