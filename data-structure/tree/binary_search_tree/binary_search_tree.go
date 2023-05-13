@@ -97,6 +97,50 @@ func (node *Node) Search(value int) (*Node, error) {
 	return &Node{}, errors.New("the value not exist in node of a tree")
 }
 
+// DeleteNode delete a node
+func (node *Node) DeleteNode(value int) {
+	node = delete(node, value)
+}
+
+func delete(node *Node, value int) *Node {
+	if node == nil {
+		return nil
+	}
+
+	switch {
+	case node.value > value:
+		node.left = delete(node.left, value)
+	case node.value < value:
+		node.right = delete(node.right, value)
+	default:
+		if node.left == nil && node.right == nil {
+			return nil
+		}
+
+		if node.left == nil {
+			return node.right
+		}
+
+		if node.right == nil {
+			return node.left
+		}
+
+		// two child
+		max := fetchMax(node.left)
+		node.value = max.value
+		node.left = delete(node.left, max.value)
+	}
+
+	return node
+}
+
+func fetchMax(node *Node) *Node {
+	for node.right != nil {
+		node = node.right
+	}
+	return node
+}
+
 // FetchMin _
 func (node *Node) FetchMin() int {
 	if node.left == nil {
@@ -216,4 +260,67 @@ func main() {
 	tree.root.BFT()
 	fmt.Println()
 	// -> 5 -> 3 -> 8 -> 1 -> 4 -> 7 -> 12 -> 9
+
+	// delete a node that has a child
+	fmt.Println("delete 12")
+	tree.root.DeleteNode(12)
+	/*
+		       5
+		     /   \
+		   3      8
+		 /   \   /  \
+		1     4 7    9
+	*/
+
+	fmt.Println("inorder")
+	tree.root.Inorder()
+	fmt.Println()
+	// -> 1 -> 3 -> 4 -> 5 -> 7 -> 8 -> 9
+
+	fmt.Println("BFT")
+	tree.root.BFT()
+	fmt.Println()
+	// -> 5 -> 3 -> 8 -> 1 -> 4 -> 7 -> 9
+
+	// delete a node that is a leaf
+	fmt.Println("delete 4")
+	tree.root.DeleteNode(4)
+	/*
+		       5
+		     /   \
+		   3      8
+		 /       /  \
+		1       7    9
+	*/
+
+	fmt.Println("inorder")
+	tree.root.Inorder()
+	fmt.Println()
+	// -> 1 -> 3 -> 5 -> 7 -> 8 -> 9
+
+	fmt.Println("BFT")
+	tree.root.BFT()
+	fmt.Println()
+	// -> 5 -> 3 -> 8 -> 1 -> 7 -> 9
+
+	// delete a node that has two child
+	fmt.Println("delete 8")
+	tree.root.DeleteNode(8)
+	/*
+		       5
+		     /   \
+		   3      7
+		 /          \
+		1            9
+	*/
+
+	fmt.Println("inorder")
+	tree.root.Inorder()
+	fmt.Println()
+	// -> 1 -> 3 -> 5 -> 7 -> 9
+
+	fmt.Println("BFT")
+	tree.root.BFT()
+	fmt.Println()
+	// -> 5 -> 3 -> 7 -> 1 -> 9
 }
